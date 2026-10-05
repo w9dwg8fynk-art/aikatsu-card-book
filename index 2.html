@@ -201,7 +201,7 @@ function card(c){
 
 function cardsPage(m){
   var a=state.cards.filter(function(c){
-    return (c.name+" "+c.num+" "+c.series+" "+c.rarity).toLowerCase().includes(query.toLowerCase());
+    return (c.name+" "+c.num+" "+c.series+" "+c.rarity).toLowerCase().replace(/[ァ-ヶ]/g,function(ch){return String.fromCharCode(ch.charCodeAt(0)-0x60)}).includes(query.toLowerCase().replace(/[ァ-ヶ]/g,function(ch){return String.fromCharCode(ch.charCodeAt(0)-0x60)}));
   });
 
   m.innerHTML=
@@ -216,7 +216,16 @@ function cardsPage(m){
       '<div class="grid">'+a.map(card).join("")+'</div>'+
     '</div>';
 
-  $("search").oninput=function(e){query=e.target.value;render()};
+  $("search").oninput=function(e){
+  query=e.target.value;
+  var pos=e.target.selectionStart;
+  render();
+  var s=$("search");
+  if(s){
+    s.focus();
+    s.setSelectionRange(pos,pos);
+  }
+};
   $("clear").onclick=function(){query="";render()};
   bindCards();
 }
