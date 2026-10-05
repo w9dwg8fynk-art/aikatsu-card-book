@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08060d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AIKATSU">
+<title>AIKATSU! ENCORE カード帳</title>
+<style>
+:root{--bg:#07050b;--panel:#0f0c14;--line:#594666;--text:#f4eef8;--muted:#aaa0b3;--violet:#a866ff}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#050408;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif}
+button,input{font:inherit}
+button{cursor:pointer}
+.app{min-height:100vh;max-width:760px;margin:auto;padding-bottom:94px;background:radial-gradient(circle at 50% -5%,#432052,#100915 38%,#050408 82%)}
+header{padding:18px 14px 10px;display:flex;justify-content:space-between;align-items:center}
+.brand small{display:block;color:#d4bddc;font-size:10px;letter-spacing:.18em}
+.brand b{font-size:23px;text-shadow:0 0 18px var(--violet)}
+.count{border:1px solid #927aa1;border-radius:18px;padding:7px 12px;background:#120d18}
+.count strong{font-size:20px}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin:0 9px 12px;padding:4px;background:#0f0b13;border:1px solid #49374f;border-radius:25px}
+.tabs button{border:0;color:var(--muted);background:transparent;padding:10px 2px;border-radius:20px;font-weight:900}
+.tabs button.active{background:linear-gradient(135deg,#7040b5,#bd74ff);color:#fff}
+main{padding:0 9px}
+.panel{background:#0f0c14ed;border:1px solid #3f3048;border-radius:20px;padding:12px}
+.searchrow{display:flex;gap:8px;margin-bottom:9px}
+.search{flex:1;min-width:0;background:#111018;color:#fff;border:1px solid #55415f;border-radius:22px;padding:11px 14px;outline:none}
+.mini{background:#18121d;color:#d5b6ee;border:1px solid #594466;border-radius:18px;padding:0 13px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.card{min-width:0;background:#15111b;border:1px solid #6b5877;border-radius:16px;overflow:hidden}
+.cardpic{
+  width:100%;
+  aspect-ratio:59/86;
+  position:relative;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  background:radial-gradient(circle at 40% 25%,#71627b,#2b2233 50%,#08070b);
+}
+.cardpic img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center;
+  background:#09070c;
+}
+.spark{font-size:58px;color:#d9b1ff;text-shadow:0 0 28px #a866ff}
+.tag{position:absolute;z-index:2;top:7px;border:1px solid #d9cbe4;background:#18131ecc;border-radius:12px;padding:4px 7px;font-size:10px;font-weight:900}
+.rar{right:7px}.have{left:7px}
+.ci{padding:8px}
+.ci b{display:block;font-size:12px;min-height:30px;line-height:1.35}
+.ci small{color:#9f94a8;font-size:10px}
+.qty{display:flex;align-items:center;justify-content:space-between;gap:5px;margin-top:7px}
+.qty button{width:31px;height:29px;flex:0 0 31px;border-radius:10px;background:#261d30;border:1px solid #624c70;color:#d5aaff;font-size:18px}
+.button,.secondary{width:100%;padding:12px;border-radius:16px;font-weight:900}
+.button{border:0;background:linear-gradient(135deg,#7544bc,#c178ff);color:#fff}
+.secondary{background:#19131f;color:#d7b5ef;border:1px solid #594466}
+.seg{display:flex;background:#19141f;border-radius:19px;padding:4px;margin-bottom:10px}
+.seg button{flex:1;border:0;background:none;color:var(--muted);border-radius:16px;padding:10px;font-weight:900}
+.seg button.active{background:#7542bd;color:#fff}
+.empty{text-align:center;color:var(--muted);padding:35px 8px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{padding:12px;text-align:center;background:#15111b;border:1px solid #39303f;border-radius:14px}
+.stat strong{display:block;font-size:20px}.stat small{color:#9f94a8}
+.ring{width:175px;height:175px;margin:8px auto 15px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#bd78ff var(--pct),#2b2631 0);position:relative}
+.ring:after{content:"";position:absolute;inset:15px;background:#0e0b12;border-radius:50%}
+.ring span{position:relative;z-index:1;font-size:22px;font-weight:900;text-align:center}
+.history{display:grid;gap:8px}
+.hist{padding:10px;background:#141019;border:1px solid #33283b;border-radius:14px}
+.hist small{display:block;color:#9f94a8;margin-top:3px}
+.bottom{position:fixed;z-index:10;bottom:0;left:50%;transform:translateX(-50%);width:min(760px,100%);display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:8px 9px calc(9px + env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent,#08070d 32%)}
+.bottom button{border:1px solid #34283d;border-radius:14px;padding:7px 2px;background:#100d15;color:var(--muted);font-size:10px}
+.bottom button.active{border-color:#9b68c9;color:#fff}
+.bottom b{display:block;font-size:17px}
+.fab{position:fixed;right:17px;bottom:78px;width:55px;height:55px;border-radius:50%;border:1px solid #ead9ff;background:linear-gradient(135deg,#7544bb,#c17aff);color:#fff;font-size:28px;z-index:9}
+.modal{position:fixed;z-index:30;inset:0;background:#000c;display:none;align-items:flex-end}
+.modal.show{display:flex}
+.sheet{width:min(760px,100%);max-height:90vh;overflow:auto;background:#110e16;border:1px solid #6b5577;border-bottom:0;border-radius:25px 25px 0 0;padding:15px}
+.sheethead{display:flex;justify-content:space-between;align-items:center}
+.close{width:37px;height:37px;border-radius:50%;background:#24202a;border:1px solid #51445b;color:#fff}
+.form{display:grid;gap:9px}
+.form input{width:100%;background:#17141d;color:#eee;border:1px solid #493b54;border-radius:15px;padding:12px}
+.hero{width:100%;aspect-ratio:59/86;max-height:60vh;border-radius:18px;background:radial-gradient(circle,#786d7e,#2b2234 50%,#09070c);display:grid;place-items:center;border:1px solid #d8c9e2;overflow:hidden}
+.hero img{display:block;width:100%;height:100%;object-fit:contain}
+.hero span{font-size:85px;color:#d8adff}
+.note{color:#9f94a8;font-size:11px;line-height:1.5}
+@media(min-width:560px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand"><small>AIKATSU! ENCORE</small><b>カード帳 ✦</b></div>
+  <div class="count"><strong id="ownedCount">0</strong> / 85 種</div>
+</header>
+
+<nav class="tabs">
+  <button data-page="cards" class="active">カード</button>
+  <button data-page="trade">譲・求</button>
+  <button data-page="qr">QR</button>
+  <button data-page="history">履歴</button>
+</nav>
+
+<main id="main"><div class="empty">読み込み中…</div></main>
+
+<nav class="bottom">
+  <button data-page="home"><b>⌂</b>ホーム</button>
+  <button data-page="cards" class="active"><b>♡</b>カード</button>
+  <button id="addBtn"><b>＋</b>追加</button>
+  <button data-page="history"><b>☷</b>履歴</button>
+</nav>
+<button class="fab" id="fab">＋</button>
+</div>
+
+<div class="modal" id="modal">
+  <div class="sheet">
+    <div class="sheethead">
+      <h2 id="modalTitle">カードを追加</h2>
+      <button class="close" id="close">×</button>
+    </div>
+    <div class="form" id="form"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+var KEY="aikatsu_cardbook_latest_v4";
+
+var seed=Array.from({length:85},function(_,i){
+  return {
+    id:"E1-"+String(i+1).padStart(2,"0"),
+    num:"E1-"+String(i+1).padStart(2,"0"),
+    name:i===0?"オーロラキスキャミソール":i===1?"オーロラキスドレープスカート":"カード E1-"+String(i+1).padStart(2,"0"),
+    rarity:[1,2,3,4,33,34,35,36,51,52,71,72,73,74,75,76,77,78,79,80,81,82].includes(i+1)?"PR":
+           [30,31,32,50].includes(i+1)?"ER":
+           (i+1<=20||(i+1>=37&&i+1<=40)||(i+1>=53&&i+1<=59))?"R":"N",
+    series:"未設定",qty:0,give:0,want:0,image:""
+  };
+});
+
+var state=null;
+try{state=JSON.parse(localStorage.getItem(KEY)||"null")}catch(e){}
+if(!state||!Array.isArray(state.cards)||state.cards.length!==85){
+  state={cards:seed,history:[]};
+}
+
+var page="cards",trade="give",query="";
+
+function $(id){return document.getElementById(id)}
+
+function esc(x){
+  return String(x==null?"":x).replace(/[&<>"']/g,function(m){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m];
+  });
+}
+
+function save(){
+  try{localStorage.setItem(KEY,JSON.stringify(state))}
+  catch(e){alert("保存容量を超えました。画像を小さくしてもう一度試してね。")}
+}
+
+function render(){
+  document.querySelectorAll("[data-page]").forEach(function(b){
+    b.classList.toggle("active",b.dataset.page===page);
+  });
+  $("ownedCount").textContent=state.cards.filter(function(c){return Number(c.qty)>0}).length;
+
+  var m=$("main");
+  if(page==="cards")cardsPage(m);
+  else if(page==="trade")tradePage(m);
+  else if(page==="qr")qrPage(m);
+  else if(page==="history")historyPage(m);
+  else homePage(m);
+}
+
+function card(c){
+  return '<article class="card" data-card="'+esc(c.id)+'">'+
+    '<div class="cardpic">'+
+      (c.image?'<img src="'+c.image+'" alt="'+esc(c.name)+'">':'<span class="spark">✦</span>')+
+      '<span class="tag rar">'+esc(c.rarity)+'</span>'+
+      '<span class="tag have">'+(c.qty?"♡ 所持":"未所持")+'</span>'+
+    '</div>'+
+    '<div class="ci">'+
+      '<b>'+esc(c.name)+'</b>'+
+      '<small>'+esc(c.num)+" ・ "+esc(c.series)+'</small>'+
+      '<div class="qty">'+
+        '<button type="button" data-minus="'+esc(c.id)+'">−</button>'+
+        '<strong>'+Number(c.qty||0)+" 枚</strong>"+
+        '<button type="button" data-plus="'+esc(c.id)+'">＋</button>'+
+      '</div>'+
+    '</div>'+
+  '</article>';
+}
+
+function cardsPage(m){
+  var a=state.cards.filter(function(c){
+    return (c.name+" "+c.num+" "+c.series+" "+c.rarity).toLowerCase().includes(query.toLowerCase());
+  });
+
+  m.innerHTML=
+    '<div class="searchrow">'+
+      '<input class="search" id="search" value="'+esc(query)+'" placeholder="⌕ カード名・番号で検索">'+
+      '<button class="mini" id="clear">×</button>'+
+    '</div>'+
+    '<div class="panel">'+
+      '<div style="display:flex;justify-content:space-between;margin-bottom:10px">'+
+        '<b>'+a.length+' 件</b><small style="color:#9f94a8">85種・番号順</small>'+
+      '</div>'+
+      '<div class="grid">'+a.map(card).join("")+'</div>'+
+    '</div>';
+
+  $("search").oninput=function(e){query=e.target.value;render()};
+  $("clear").onclick=function(){query="";render()};
+  bindCards();
+}
+
+function bindCards(){
+  document.querySelectorAll("[data-card]").forEach(function(el){
+    el.onclick=function(e){
+      if(e.target.closest("[data-plus],[data-minus]"))return;
+      openDetail(el.dataset.card);
+    };
+  });
+
+  document.querySelectorAll("[data-plus]").forEach(function(b){
+    b.onclick=function(e){e.stopPropagation();change(b.dataset.plus,1)};
+  });
+
+  document.querySelectorAll("[data-minus]").forEach(function(b){
+    b.onclick=function(e){e.stopPropagation();change(b.dataset.minus,-1)};
+  });
+}
+
+function change(id,d){
+  var c=state.cards.find(function(x){return x.id===id});
+  if(!c)return;
+  c.qty=Math.max(0,Number(c.qty||0)+d);
+  state.history.unshift({time:Date.now(),num:c.num,name:c.name,added:d});
+  save();
+  render();
+}
+
+function openDetail(id){
+  var c=state.cards.find(function(x){return x.id===id});
+  if(!c)return;
+
+  $("modalTitle").textContent=c.name;
+  $("form").innerHTML=
+    '<div class="hero">'+
+      (c.image?'<img src="'+c.image+'" alt="'+esc(c.name)+'">':'<span>✦</span>')+
+    '</div>'+
+    '<h3>'+esc(c.name)+'</h3>'+
+    '<small style="color:#9f94a8">'+esc(c.num)+" / "+esc(c.rarity)+'</small>'+
+    '<div class="qty" style="margin:14px 0">'+
+      '<button type="button" class="secondary" id="detailMinus">− 1枚</button>'+
+      '<strong>'+Number(c.qty||0)+" 枚</strong>"+
+      '<button type="button" class="button" id="detailPlus" style="width:auto">＋ 1枚</button>'+
+    '</div>'+
+    '<button type="button" class="secondary" id="editBtn">詳細を編集</button>';
+
+  $("modal").classList.add("show");
+  $("detailMinus").onclick=function(){change(c.id,-1)};
+  $("detailPlus").onclick=function(){change(c.id,1)};
+  $("editBtn").onclick=function(){openAdd(c)};
+}
+
+function openAdd(c){
+  $("modalTitle").textContent=c?"カードを編集":"カードを追加";
+
+  $("form").innerHTML=
+    '<input id="fnum" value="'+esc(c&&c.num||"")+'" placeholder="カード番号">'+
+    '<input id="fname" value="'+esc(c&&c.name||"")+'" placeholder="カード名">'+
+    '<input id="frarity" value="'+esc(c&&c.rarity||"N")+'" placeholder="レアリティ">'+
+    '<input id="fseries" value="'+esc(c&&c.series||"未設定")+'" placeholder="シリーズ">'+
+    '<input id="fqty" type="number" min="0" value="'+Number(c&&c.qty!=null?c.qty:1)+'" placeholder="所持枚数">'+
+    '<input id="fgive" type="number" min="0" value="'+Number(c&&c.give||0)+'" placeholder="譲渡用枚数">'+
+    '<input id="fwant" type="number" min="0" value="'+Number(c&&c.want||0)+'" placeholder="求めている枚数">'+
+    '<input id="fimage" type="file" accept="image/*">'+
+    '<div class="note">カード画像は縦長のカード比率で表示します。画像は引き伸ばさず、切り抜かず、全体が見えるようにします。</div>'+
+    '<button type="button" class="button" id="saveCard">'+(c?"更新する":"保存する")+'</button>'+
+    '<button type="button" class="secondary" id="cancel">キャンセル</button>';
+
+  $("modal").classList.add("show");
+  $("cancel").onclick=closeModal;
+  $("saveCard").onclick=function(){saveCard(c&&c.id)};
+}
+
+function readImage(file){
+  return new Promise(function(resolve){
+    if(!file){resolve("");return}
+
+    var fr=new FileReader();
+
+    fr.onload=function(){
+      var img=new Image();
+
+      img.onload=function(){
+        var maxW=600,maxH=900;
+        var scale=Math.min(1,maxW/img.naturalWidth,maxH/img.naturalHeight);
+        var w=Math.max(1,Math.round(img.naturalWidth*scale));
+        var h=Math.max(1,Math.round(img.naturalHeight*scale));
+
+        var canvas=document.createElement("canvas");
+        canvas.width=w;canvas.height=h;
+
+        var ctx=canvas.getContext("2d");
+        ctx.drawImage(img,0,0,w,h);
+
+        resolve(canvas.toDataURL("image/jpeg",.84));
+      };
+
+      img.onerror=function(){resolve(fr.result)};
+      img.src=fr.result;
+    };
+
+    fr.readAsDataURL(file);
+  });
+}
+
+async function saveCard(id){
+  var file=$("fimage").files[0];
+  var img=await readImage(file);
+
+  var c=id?state.cards.find(function(x){return x.id===id}):null;
+
+  if(!c){
+    c={id:"C-"+Date.now(),num:"",name:"",rarity:"N",series:"未設定",qty:0,give:0,want:0,image:""};
+    state.cards.push(c);
+  }
+
+  c.num=$("fnum").value.trim();
+  c.name=$("fname").value.trim()||"名称未設定";
+  c.rarity=$("frarity").value.trim()||"N";
+  c.series=$("fseries").value.trim()||"未設定";
+  c.qty=Math.max(0,Number($("fqty").value)||0);
+  c.give=Math.max(0,Number($("fgive").value)||0);
+  c.want=Math.max(0,Number($("fwant").value)||0);
+  if(img)c.image=img;
+
+  state.history.unshift({time:Date.now(),num:c.num,name:c.name,added:c.qty});
+  save();
+  closeModal();
+  render();
+}
+
+function closeModal(){$("modal").classList.remove("show")}
+
+function tradePage(m){
+  var a=state.cards.filter(function(c){
+    return trade==="give"?Number(c.give)>0:Number(c.want)>0;
+  });
+
+  m.innerHTML=
+    '<div class="panel">'+
+      '<div class="seg">'+
+        '<button id="give" class="'+(trade==="give"?"active":"")+'">譲 '+state.cards.filter(function(c){return Number(c.give)>0}).length+'</button>'+
+        '<button id="want" class="'+(trade==="want"?"active":"")+'">求 '+state.cards.filter(function(c){return Number(c.want)>0}).length+'</button>'+
+      '</div>'+
+      '<div class="grid">'+(a.map(card).join("")||'<div class="empty">まだ登録されていないよ</div>')+'</div>'+
+    '</div>';
+
+  $("give").onclick=function(){trade="give";render()};
+  $("want").onclick=function(){trade="want";render()};
+  bindCards();
+}
+
+function qrPage(m){
+  m.innerHTML=
+    '<div class="panel">'+
+      '<div style="height:280px;border:1px solid #54425f;border-radius:20px;display:grid;place-items:center;text-align:center">'+
+        '<div><div style="font-size:80px;color:#c07aff">▦</div><p>カード番号を入力して所持登録できます</p></div>'+
+      '</div>'+
+      '<button type="button" class="button" style="margin-top:10px" id="manual">番号を手入力</button>'+
+    '</div>';
+
+  $("manual").onclick=function(){
+    var n=prompt("カード番号を入力");
+    if(!n)return;
+    var c=state.cards.find(function(x){return x.num===n});
+    if(c)change(c.id,1);
+    else openAdd({num:n,name:"新しいカード",rarity:"N",series:"未設定",qty:0,give:0,want:0});
+  };
+}
+
+function historyPage(m){
+  m.innerHTML=
+    '<div class="panel"><b>読み込み履歴</b>'+
+      '<div class="history" style="margin-top:10px">'+
+        (state.history.slice(0,30).map(function(h){
+          return '<div class="hist"><b>'+esc(h.num)+'</b><small>'+esc(h.name)+'<br>'+
+            new Date(h.time).toLocaleString("ja-JP")+" / "+(h.added>0?"+":"")+h.added+
+          '</small></div>';
+        }).join("")||'<div class="empty">まだ履歴はないよ</div>')+
+      '</div>'+
+    '</div>';
+}
+
+function homePage(m){
+  var o=state.cards.filter(function(c){return Number(c.qty)>0}).length;
+  var p=(o/85*100).toFixed(1);
+
+  m.innerHTML=
+    '<div class="panel"><b>コレクション</b>'+
+      '<div class="ring" style="--pct:'+p+'%"><span>'+o+' / 85<br><small>'+p+'%</small></span></div>'+
+      '<div class="stats">'+
+        '<div class="stat"><strong>'+o+'</strong><small>所持</small></div>'+
+        '<div class="stat"><strong>'+(85-o)+'</strong><small>未所持</small></div>'+
+        '<div class="stat"><strong>'+state.cards.reduce(function(n,c){return n+Number(c.give||0)},0)+'</strong><small>譲</small></div>'+
+        '<div class="stat"><strong>'+state.cards.reduce(function(n,c){return n+Number(c.want||0)},0)+'</strong><small>求</small></div>'+
+      '</div>'+
+    '</div>';
+}
+
+document.querySelectorAll("[data-page]").forEach(function(b){
+  b.onclick=function(){page=b.dataset.page;render()};
+});
+
+$("fab").onclick=function(){openAdd(null)};
+$("addBtn").onclick=function(){openAdd(null)};
+$("close").onclick=closeModal;
+$("modal").onclick=function(e){if(e.target===$("modal"))closeModal()};
+
+render();
+})();
+</script>
+</body>
+</html>
