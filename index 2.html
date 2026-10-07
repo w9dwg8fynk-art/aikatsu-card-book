@@ -167,8 +167,11 @@ function esc(x){
 }
 
 function save(){
-  try{localStorage.setItem(KEY,JSON.stringify(state))}
-  catch(e){alert("保存容量を超えました。画像を小さくしてもう一度試してね。")}
+  try{
+    localStorage.setItem(KEY,JSON.stringify(state));
+  }catch(e){
+    console.log("保存に失敗しました",e);
+  }
 }
 
 function render(){
@@ -350,6 +353,37 @@ function readImage(file){
   });
 }
 
+  async function compressSavedImages(){
+  var list=state.cards.filter(function(c){return c.image});
+  for(var i=0;i<list.length;i++){
+    var c=list[i];
+    try{
+      var img=await new Promise(function(resolve,reject){
+        var im=new Image();
+        im.onload=function(){resolve(im)};
+        im.onerror=reject;
+        im.src=c.image;
+      });
+
+      var maxW=360,maxH=540;
+      var scale=Math.min(1,maxW/img.naturalWidth,maxH/img.naturalHeight);
+      var w=Math.max(1,Math.round(img.naturalWidth*scale));
+      var h=Math.max(1,Math.round(img.naturalHeight*scale));
+
+      var canvas=document.createElement("canvas");
+      canvas.width=w;
+      canvas.height=h;
+
+      var ctx=canvas.getContext("2d");
+      ctx.drawImage(img,0,0,w,h);
+
+      c.image=canvas.toDataURL("image/jpeg",.55);
+    }catch(e){}
+  }
+  try{
+    localStorage.setItem(KEY,JSON.stringify(state));
+  }catch(e){}
+}
 async function saveCard(id){
   var file=$("fimage").files[0];
   var img=await readImage(file);
