@@ -251,6 +251,17 @@ function bindCards(){
   document.querySelectorAll("[data-minus]").forEach(function(b){
     b.onclick=function(e){e.stopPropagation();change(b.dataset.minus,-1)};
   });
+  document.querySelectorAll("[data-trade]").forEach(function(b){
+  b.onclick=function(e){
+    e.stopPropagation();
+    var c=state.cards.find(function(x){return x.id===b.dataset.id;});
+    if(!c)return;
+    var t=b.dataset.trade;
+    c[t]=Number(c[t]||0)>0?0:1;
+    save();
+    render();
+  };
+});
 }
 
 function change(id,d){
