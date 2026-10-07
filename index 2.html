@@ -78,6 +78,10 @@ main{padding:0 9px}
 .bottom button{border:1px solid #34283d;border-radius:14px;padding:7px 2px;background:#100d15;color:var(--muted);font-size:10px}
 .bottom button.active{border-color:#9b68c9;color:#fff}
 .bottom b{display:block;font-size:17px}
+  .tradeBtns{display:flex;gap:8px;margin-top:8px}
+.tradeBtn{flex:1;border:0;border-radius:10px;padding:9px;font-weight:700;background:#19141f;color:#fff}
+.tradeBtn:first-child{color:#ff9fb8}
+.tradeBtn:last-child{color:#9bc7ff}
 .fab{position:fixed;right:17px;bottom:78px;width:55px;height:55px;border-radius:50%;border:1px solid #ead9ff;background:linear-gradient(135deg,#7544bb,#c17aff);color:#fff;font-size:28px;z-index:9}
 .modal{position:fixed;z-index:30;inset:0;background:#000c;display:none;align-items:flex-end}
 .modal.show{display:flex}
@@ -196,6 +200,7 @@ function card(c){
         '<strong>'+Number(c.qty||0)+" 枚</strong>"+
         '<button type="button" data-plus="'+esc(c.id)+'">＋</button>'+
       '</div>'+
+    '<div class="tradeBtns"><button type="button" class="tradeBtn" data-trade="give" data-id="'+esc(c.id)+'">譲</button><button type="button" class="tradeBtn" data-trade="want" data-id="'+esc(c.id)+'">求</button></div>'+
     '</div>'+
   '</article>';
 }
