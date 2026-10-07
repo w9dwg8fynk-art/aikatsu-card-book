@@ -239,7 +239,7 @@ function cardsPage(m){
 function bindCards(){
   document.querySelectorAll("[data-card]").forEach(function(el){
     el.onclick=function(e){
-      if(e.target.closest("[data-plus],[data-minus]"))return;
+      if(e.target.closest("[data-plus],[data-minus],[data-trade]"))return;
       openDetail(el.dataset.card);
     };
   });
