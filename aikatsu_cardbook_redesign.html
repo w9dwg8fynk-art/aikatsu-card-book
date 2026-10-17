@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090a0e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>AIKATSU! ENCORE | CARD BOOK</title>
+<style>
+:root{color-scheme:dark;--bg:#090a0e;--panel:#12141a;--line:#414550;--muted:#989daa;--purple:#9b83ef;--pale:#c0b0ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#34313f 0,#15161c 32%,#090a0e 75%);color:#f4f4f8;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif;min-height:100vh}button,input{font:inherit}button{cursor:pointer}
+.app{max-width:1000px;margin:auto;padding:0 13px 50px}
+header{padding:25px 3px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}.eyebrow{font-size:10px;letter-spacing:.22em;color:#c2c4ce;font-weight:800}.brand h1{margin:5px 0 0;font-size:clamp(22px,5vw,31px);letter-spacing:.04em}.brand h1 span{color:var(--pale)}.total{border:1px solid #676b78;background:#171920;padding:10px 13px;border-radius:15px;text-align:right;min-width:95px}.total strong{font-size:24px}.total small{display:block;color:var(--muted);font-size:10px}
+.hero{border:1px solid #454954;border-radius:20px;background:linear-gradient(125deg,#1a1c23,#111217 60%,#201c2c);padding:16px;margin-bottom:14px}.progress-top{display:flex;justify-content:space-between;gap:8px;margin-bottom:10px;font-size:13px}.progress-top span{color:var(--pale);font-weight:800}.bar{height:6px;background:#30323a;border-radius:10px;overflow:hidden}.bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,#777d8b,var(--purple));border-radius:10px}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:13px}.metric{border-left:1px solid #4a4d58;padding-left:10px}.metric strong{display:block;font-size:18px}.metric small{color:var(--muted);font-size:10px}
+.toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:7px;margin-bottom:10px}.search{width:100%;min-width:0;background:#111319;border:1px solid #4b4f5b;color:#fff;border-radius:13px;padding:12px 13px;outline:none}.search:focus{border-color:var(--purple)}.btn{border:1px solid #5b5f6c;border-radius:13px;padding:10px 12px;color:#f3f3f7;background:#1a1c23;font-size:12px;font-weight:800;white-space:nowrap}.btn.primary{background:linear-gradient(135deg,#555b68,#8271c6);border-color:#a79be1}.btn:disabled{opacity:.6}
+.filters{border:1px solid #353842;background:#111319;border-radius:17px;padding:12px;margin-bottom:12px}.filter-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.filter-row+.filter-row{border-top:1px solid #2c2e36;margin-top:10px;padding-top:10px}.filter-label{font-size:10px;color:var(--muted);width:48px;flex:0 0 48px}.chip{border:1px solid #444853;background:#1a1c23;color:#c4c6cf;border-radius:999px;padding:7px 10px;font-size:11px;font-weight:750}.chip.active{background:#302941;border-color:#a08be8;color:#f3edff}.chip.rarity.active{background:#d9d9e1;color:#171820;border-color:#fff}
+.results-line{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:15px 2px 10px}.results-line b{font-size:13px}.results-line small{font-size:11px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card{min-width:0;overflow:hidden;background:linear-gradient(160deg,#191b22,#101116);border:1px solid #414550;border-radius:15px}.card.owned{border-color:#8f7bc8;box-shadow:0 0 0 1px #9b83ef20}.art{position:relative;aspect-ratio:59/86;background:#0d0e12;display:grid;place-items:center;overflow:hidden}.art img{width:100%;height:100%;object-fit:contain;display:block}.placeholder{font-size:40px;color:#777b89}.badges{position:absolute;top:7px;left:7px;right:7px;display:flex;justify-content:space-between;gap:4px;pointer-events:none}.badge{background:#0c0d11e8;border:1px solid #777b88;color:#f2f3f7;border-radius:7px;padding:4px 6px;font-size:9px;font-weight:900}.badge.pr{border-color:#b6a5ff;color:#e5dcff}.badge.have{background:#24202e;border-color:var(--purple);color:#eee6ff}.info{padding:9px}.name{font-size:12px;font-weight:850;line-height:1.4;min-height:34px;overflow-wrap:anywhere}.meta{display:flex;justify-content:space-between;gap:4px;color:var(--muted);font-size:10px;margin-top:5px}.qtyrow{display:flex;align-items:center;justify-content:space-between;gap:5px;margin-top:9px}.qtybtn{width:31px;height:31px;flex:0 0 31px;border-radius:10px;background:#20222a;border:1px solid #5a5e6a;color:#f0eff7;font-size:18px}.qtybtn.plus{background:#302942;border-color:#9280d7;color:#e9e0ff}.qty{font-size:12px;font-weight:900;text-align:center;flex:1}.qty small{display:block;font-size:9px;color:var(--muted);font-weight:600;margin-top:2px}
+.empty{border:1px dashed #464a56;border-radius:15px;padding:35px 15px;text-align:center;color:var(--muted);grid-column:1/-1;line-height:1.8}.status{font-size:10px;color:#a9acb7;text-align:center;padding:10px 0;min-height:25px}.status.error{color:#f0b4bd}footer{margin-top:25px;text-align:center;color:#727785;font-size:10px;line-height:1.7}a{color:#c3b7f5}
+.modal{display:none;position:fixed;z-index:30;inset:0;background:#000b;align-items:flex-end;justify-content:center}.modal.show{display:flex}.sheet{width:min(620px,100%);max-height:85vh;overflow:auto;background:#15171e;border:1px solid #656a78;border-bottom:0;border-radius:22px 22px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom))}.sheethead{display:flex;justify-content:space-between;align-items:center}.sheethead h2{font-size:17px;margin:0}.close{width:36px;height:36px;border-radius:50%;border:1px solid #555a66;background:#22252d;color:#fff}.actions{display:grid;gap:8px;margin-top:15px}.file{display:none}
+@media(min-width:520px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.app{padding-left:20px;padding-right:20px}}@media(min-width:760px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand"><div class="eyebrow">AIKATSU! ENCORE / COLLECTION ARCHIVE</div><h1>CARD <span>BOOK</span></h1></div><div class="total"><strong id="ownedKinds">0</strong><small><span id="totalKinds">0</span>種類中 所持</small></div></header>
+<section class="hero"><div class="progress-top"><b>COLLECTION PROGRESS</b><span id="percent">0.0%</span></div><div class="bar"><span id="bar"></span></div><div class="metrics"><div class="metric"><strong id="ownedCount">0</strong><small>所持種類</small></div><div class="metric"><strong id="copies">0</strong><small>所持枚数</small></div><div class="metric"><strong id="missing">0</strong><small>未所持</small></div></div></section>
+<div class="toolbar"><input id="search" class="search" type="search" placeholder="カード番号・レアリティで検索" autocomplete="off"><button class="btn primary" id="refresh">↻ 更新</button><button class="btn" id="menu">•••</button></div>
+<section class="filters"><div class="filter-row"><span class="filter-label">表示</span><button class="chip active" data-status="all">すべて</button><button class="chip" data-status="missing">未所持</button><button class="chip" data-status="owned">所持済み</button></div><div class="filter-row"><span class="filter-label">レア</span><button class="chip rarity active" data-rarity="ALL">ALL</button><button class="chip rarity" data-rarity="PR">PR</button><button class="chip rarity" data-rarity="R">R</button><button class="chip rarity" data-rarity="N">N</button><button class="chip rarity" data-rarity="ER">ER</button></div><div class="filter-row"><span class="filter-label">シリーズ</span><button class="chip active" data-series="all">すべて</button><button class="chip" data-series="1">1弾</button><button class="chip" data-series="promo">プロモ</button><button class="chip" id="parallel">パラレル：OFF</button></div></section>
+<div class="results-line"><b id="resultCount">カード一覧</b><small id="source">読み込み中…</small></div><section class="grid" id="grid"><div class="empty">カード情報を読み込んでいるよ…</div></section><div class="status" id="status"></div>
+<footer>所持データはこの端末のブラウザに保存されます。<br><a href="https://min-poke.github.io/cardlist-aikatsu-encore/" target="_blank" rel="noopener">元のカードリスト</a> ・ <a href="https://dcd.aikatsu.com/encore/cardlist/" target="_blank" rel="noopener">公式カードリスト</a></footer>
+</div>
+<div class="modal" id="modal"><div class="sheet"><div class="sheethead"><h2>データ管理</h2><button class="close" id="close">×</button></div><p style="font-size:12px;color:#b7bac5;line-height:1.7">機種変更やブラウザのデータ削除に備えて、所持データを保存できます。</p><div class="actions"><button class="btn primary" id="export">所持データをバックアップ</button><button class="btn" id="import">バックアップを読み込む</button><button class="btn" id="reset">絞り込みをリセット</button></div><input class="file" id="file" type="file" accept="application/json,.json"></div></div>
+<script>
+(function(){
+"use strict";
+var KEY="aikatsu_cardbook_v2",OLD_KEYS=["aikatsu_cardbook_latest_v4","aikatsu_cardbook_fixed_v3"];
+var SOURCE="https://raw.githubusercontent.com/min-poke/cardlist-aikatsu-encore/main/cards.js";
+var IMAGE_ROOT="https://min-poke.github.io/cardlist-aikatsu-encore/";
+var cards=[],filters={q:"",status:"all",rarity:"ALL",series:"all",parallel:false};
+function $(id){return document.getElementById(id)}
+function parse(s){try{return JSON.parse(s)}catch(e){return null}}
+function base(id){var m=String(id||"").match(/E\d+-\d+/);return m?m[0]:""}
+function img(path){return /^https?:\/\//i.test(path||"")?path:IMAGE_ROOT+String(path||"").replace(/^\//,"")}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function savedCards(){
+ var x=parse(localStorage.getItem(KEY)||"null");if(x&&Array.isArray(x.cards))return x.cards;
+ for(var i=0;i<OLD_KEYS.length;i++){x=parse(localStorage.getItem(OLD_KEYS[i])||"null");if(x&&Array.isArray(x.cards))return x.cards}
+ x=parse(localStorage.getItem("aikatsu_encore_owned")||"null");
+ if(x&&typeof x==="object"&&!Array.isArray(x))return Object.keys(x).map(function(id){return{id:id,qty:x[id]}})
+ return [];
+}
+var previous=savedCards();
+function merge(list,old){
+ var ids={},nums={};(old||[]).forEach(function(c){ids[c.id]=c;var n=base(c.num||c.id);if(n&&!c.parallel&&!String(c.id||"").includes("_p1")&&!nums[n])nums[n]=c});
+ return list.map(function(c){var p=ids[c.id]||(!c.parallel?nums[base(c.id)]:null),q=p?Number(p.qty)||0:0;return Object.assign({},c,{qty:Math.max(0,Math.min(3,Math.floor(q)))})})
+}
+function normalize(list){return list.map(function(c){return{id:c.id,name:c.name,rarity:c.rarity,series:String(c.series)==="promo"?"promo":String(c.series),image:img(c.image),parallel:c.parallel===true,qty:0}})}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({version:2,updatedAt:new Date().toISOString(),cards:cards.map(function(c){return{id:c.id,qty:c.qty}})}))}catch(e){message("保存できません。端末の空き容量を確認してね。",true)}}
+function message(s,error){$("status").textContent=s||"";$("status").classList.toggle("error",!!error)}
+function label(s){return s==="promo"?"プロモ":s+"弾"}
+function visible(c){
+ if(c.parallel&&!filters.parallel)return false;
+ if(filters.status==="owned"&&c.qty===0)return false;if(filters.status==="missing"&&c.qty>0)return false;
+ if(filters.rarity!=="ALL"&&c.rarity!==filters.rarity)return false;if(filters.series!=="all"&&String(c.series)!==filters.series)return false;
+ var q=filters.q.trim().toLowerCase();return !q||(c.name+" "+c.id+" "+c.rarity+" "+label(c.series)).toLowerCase().includes(q)
+}
+function render(){
+ var normal=cards.filter(function(c){return !c.parallel}),owned=normal.filter(function(c){return c.qty>0}).length,copies=normal.reduce(function(n,c){return n+c.qty},0),pct=normal.length?owned/normal.length*100:0;
+ $("ownedKinds").textContent=owned;$("totalKinds").textContent=normal.length;$("ownedCount").textContent=owned;$("copies").textContent=copies;$("missing").textContent=normal.length-owned;$("percent").textContent=pct.toFixed(1)+"%";$("bar").style.width=pct+"%";
+ var list=cards.filter(visible);$("resultCount").textContent=list.length+" 枚表示";
+ $("grid").innerHTML=list.length?list.map(function(c){
+ var qty=c.qty>=3?"3+":String(c.qty),rarityClass=(c.rarity==="PR"||c.rarity==="ER")?" pr":"";
+ return '<article class="card '+(c.qty?"owned":"")+'"><div class="art">'+(c.image?'<img loading="lazy" src="'+esc(c.image)+'" alt="'+esc(c.name)+'" onerror="this.style.display=&quot;none&quot;;this.nextElementSibling.style.display=&quot;block&quot;"><span class="placeholder" style="display:none">✦</span>':'<span class="placeholder">✦</span>')+'<div class="badges"><span class="badge'+rarityClass+'">'+esc(c.rarity)+'</span>'+(c.qty?'<span class="badge have">所持</span>':'')+'</div></div><div class="info"><div class="name">'+esc(c.name)+'</div><div class="meta"><span>'+esc(c.id.replace(/_p1$/,""))+'</span><span>'+label(c.series)+(c.parallel?" / PARALLEL":"")+'</span></div><div class="qtyrow"><button class="qtybtn" data-id="'+esc(c.id)+'" data-step="-1">−</button><div class="qty">'+qty+'<small>所持枚数</small></div><button class="qtybtn plus" data-id="'+esc(c.id)+'" data-step="1">＋</button></div></div></article>'
+ }).join(""):'<div class="empty">該当するカードがないよ。<br>検索や絞り込みを変えてみてね。</div>';
+}
+function updateChips(){["status","rarity","series"].forEach(function(k){document.querySelectorAll("[data-"+k+"]").forEach(function(b){b.classList.toggle("active",b.getAttribute("data-"+k)===filters[k])})});$("parallel").classList.toggle("active",filters.parallel);$("parallel").textContent="パラレル："+(filters.parallel?"ON":"OFF")}
+function parseCards(text){
+ var re=/\{\s*id:\s*"([^"]+)"\s*,\s*name:\s*"([^"]+)"\s*,\s*rarity:\s*"([^"]+)"\s*,\s*series:\s*"([^"]+)"\s*,\s*image:\s*"([^"]+)"(?:\s*,\s*parallel:\s*(true|false))?\s*\}/g,m,out=[];
+ while((m=re.exec(text))!==null)out.push({id:m[1],name:m[2],rarity:m[3],series:m[4],image:m[5],parallel:m[6]==="true"});
+ if(!out.length)throw Error("カードデータを読み取れませんでした");return out
+}
+async function refresh(manual){
+ var b=$("refresh");b.disabled=true;b.textContent="確認中…";
+ try{
+  var r=await fetch(SOURCE,{cache:"no-store"});if(!r.ok)throw Error("取得できませんでした");
+  var fresh=normalize(parseCards(await r.text()));cards=merge(fresh,cards.length?cards:previous);
+  localStorage.setItem("aikatsu_cardbook_cache",JSON.stringify(fresh));save();render();$("source").textContent="最新 "+fresh.length+"枚";message("カード一覧を更新したよ。所持データは引き継いであります。")
+ }catch(e){
+  var cache=parse(localStorage.getItem("aikatsu_cardbook_cache")||"null");
+  if(Array.isArray(cache)&&cache.length)cards=merge(cache,cards.length?cards:previous);
+  else{cards=[];$("grid").innerHTML='<div class="empty">カード情報を読み込めなかったよ。<br>通信を確認して「更新」を押してね。<br><a href="https://min-poke.github.io/cardlist-aikatsu-encore/">元サイトを開く</a></div>'}
+  render();$("source").textContent="保存済みデータ";message("元サイトに接続できないため、保存済みの情報を表示中。",true);
+  if(manual)alert("自動更新できなかったよ。通信を確認してもう一度試してね。所持データは変更していないよ。")
+ }finally{b.disabled=false;b.textContent="↻ 更新"}
+}
+function backup(){var blob=new Blob([JSON.stringify({app:"AIKATSU CARD BOOK",version:2,exportedAt:new Date().toISOString(),cards:cards.map(function(c){return{id:c.id,qty:c.qty}})},null,2)],{type:"application/json"}),u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download="aikatsu-cardbook-backup.json";a.click();URL.revokeObjectURL(u);message("バックアップを保存したよ。")}
+function restore(file){if(!file)return;var r=new FileReader();r.onload=function(){var d=parse(r.result);if(!d||!Array.isArray(d.cards)){alert("このバックアップは読み込めなかったよ。");return}var map={};d.cards.forEach(function(c){map[c.id]=Math.max(0,Math.min(3,Math.floor(Number(c.qty)||0)))});cards.forEach(function(c){if(Object.prototype.hasOwnProperty.call(map,c.id))c.qty=map[c.id]});save();render();$("modal").classList.remove("show");message("バックアップから所持データを復元したよ。")};r.readAsText(file)}
+$("search").oninput=function(){filters.q=this.value;render()};
+document.querySelectorAll("[data-status]").forEach(function(b){b.onclick=function(){filters.status=b.dataset.status;updateChips();render()}});
+document.querySelectorAll("[data-rarity]").forEach(function(b){b.onclick=function(){filters.rarity=b.dataset.rarity;updateChips();render()}});
+document.querySelectorAll("[data-series]").forEach(function(b){b.onclick=function(){filters.series=b.dataset.series;updateChips();render()}});
+$("parallel").onclick=function(){filters.parallel=!filters.parallel;updateChips();render()};
+$("grid").onclick=function(e){var b=e.target.closest("[data-step]");if(!b)return;var c=cards.find(function(x){return x.id===b.dataset.id});if(!c)return;c.qty=Math.max(0,Math.min(3,c.qty+Number(b.dataset.step)));save();render()};
+$("refresh").onclick=function(){refresh(true)};$("menu").onclick=function(){$("modal").classList.add("show")};$("close").onclick=function(){$("modal").classList.remove("show")};$("modal").onclick=function(e){if(e.target===$("modal"))$("modal").classList.remove("show")};
+$("export").onclick=backup;$("import").onclick=function(){$("file").click()};$("file").onchange=function(){restore(this.files&&this.files[0]);this.value=""};
+$("reset").onclick=function(){filters={q:"",status:"all",rarity:"ALL",series:"all",parallel:false};$("search").value="";updateChips();render();$("modal").classList.remove("show")};
+cards=merge([],previous);updateChips();render();refresh(false);
+})();
+</script>
+</body>
+</html>
